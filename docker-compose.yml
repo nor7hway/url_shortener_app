@@ -1,0 +1,51 @@
+version: "3.0"
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    environment: 
+      POSTGRES_USER: postgresuser
+      POSTGRES_DB: newdb
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d newdb -U postgresuser"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:6.2.5-alpine
+    container_name: redis
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  app:
+    build: .
+    container_name: app
+    volumes:
+      - .:/app
+    depends_on: 
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment: 
+      DB_USER: postgresuser
+      DB_HOST: db
+      DB_PASS: password
+      DB_NAME: newdb
+      REDIS_HOST: redis
+      REDIS_DB: 0
+    ports:
+      - 8000
+    restart: always
+  nginx:
+    image: nginx:1.21.1-alpine
+    container_name: nginx
+    volumes: 
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on: 
+      - app
+    ports: 
+      - 8989:8989
