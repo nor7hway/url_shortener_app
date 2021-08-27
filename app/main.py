@@ -28,29 +28,5 @@ async def health_check():
     return {"msg": "Hello, World"}
 
 
-@app.get('/app/urls')
-async def urls():
-    query = "select * from urls"
-    return await database.fetch_all(query)
-
-
-@app.get('/app/users')
-async def users():
-    query = "select * from users"
-    return await database.fetch_all(query)
-
-
-@app.get('/app/visits')
-async def visits():
-    query = "select * from visits"
-    return await database.fetch_all(query)
-
-
-@app.get('/app/refresh-table')
-async def refresh_sessions():
-    query = "select * from refresh_sessions"
-    return await database.fetch_all(query)
-
-
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
