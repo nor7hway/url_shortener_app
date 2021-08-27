@@ -16,7 +16,7 @@ async def get_country(request: str):
                 res = await client.get(f"https://ipinfo.io/{ip_address}/json")
                 if res.status_code == 200:
                     country = res.json().get("country", "Not defined")
-            await request.app.state.redis.set(ip_address, country)
+                await request.app.state.redis.set(ip_address, country)
             return country
         except Exception:
             return "Not defined"
