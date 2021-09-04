@@ -12,6 +12,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
   redis:
     image: redis:6.2.5-alpine
     container_name: redis
@@ -20,6 +21,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: always
   app:
     build: .
     container_name: app
@@ -49,3 +51,4 @@ services:
       - app
     ports: 
       - 8989:8989
+    restart: always
